@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NZ North Island Adventures</title>
+    <style>
+        /* --- CSS VARIABLES (THEMING) --- */
+        :root {
+            --primary: #3b82f6; /* Bright Blue */
+            --accent: #10b981;  /* Emerald Green */
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #111827;
+            --text-sub: #6b7280;
+            --tag-bg: #eff6ff;
+            --tag-text: #2563eb;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* DARK MODE OVERRIDES */
+        body.dark-mode {
+            --primary: #60a5fa;
+            --bg: #111827; /* Dark Slate */
+            --card-bg: #1f2937; /* Lighter Slate */
+            --text: #f9fafb;
+            --text-sub: #9ca3af;
+            --tag-bg: #374151;
+            --tag-text: #93c5fd;
+            --border: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        /* --- HEADER & CONTROLS --- */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.05);
+            border-color: var(--primary);
+        }
+
+        /* --- FILTERS --- */
+        .filters {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            scrollbar-width: none;
+        }
+        .filters::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* --- CARD LIST --- */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin: 0;
+            color: var(--text);
+        }
+
+        .fun-badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.03);
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        body.dark-mode .info-grid {
+             background: rgba(255,255,255,0.05);
+        }
+
+        .review-box {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--text);
+            border-left: 3px solid var(--primary);
+            padding-left: 12px;
+            opacity: 0.9;
+        }
+
+        /* --- MAP VIEW PLACEHOLDER --- */
+        #map-view {
+            display: none;
+            background: var(--card-bg);
+            height: 500px;
+            border-radius: 16px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px dashed var(--text-sub);
+            color: var(--text-sub);
+        }
+
+        .hidden { display: none !important; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-row">
+        <h1>🇳🇿 North Island Fun</h1>
+        <div class="controls">
+            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
+            <button class="icon-btn" onclick="toggleView()" id="viewBtn" title="Toggle Map">🗺️</button>
+        </div>
+    </div>
+    
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterData('All')">All</button>
+        <button class="filter-btn" onclick="filterData('RainyDay')">☔ Rainy Day</button>
+        <button class="filter-btn" onclick="filterData('Adrenaline')">⚡ Adrenaline</button>
+        <button class="filter-btn" onclick="filterData('ToddlerFriendly')">👶 Toddlers</button>
+        <button class="filter-btn" onclick="filterData('HiddenGem')">💎 Hidden Gems</button>
+        <button class="filter-btn" onclick="filterData('Free')">💰 Low Cost</button>
+    </div>
+
+    <div id="list-view"></div>
+
+    <div id="map-view" class="hidden">
+        <div style="font-size: 3rem; margin-bottom: 10px;">🗺️</div>
+        <h3>Map View Prototype</h3>
+        <p>This area requires a Google Maps API Key.</p>
+    </div>
+</div>
+
+<script>
+    // --- COMPLETE DATASET (35+ ITEMS) ---
+    const activities = [
+        // TOP 10 BLOCKBUSTERS
+        { name: "Hobbiton Movie Set", location: "Matamata", yearsActive: 24, weather: "Outdoor", funScale: 9, cost: "$$$", tags: ["BucketList", "InstaWorthy", "MultiGen"], review: "Magical even if you aren't a fan." },
+        { name: "Waitomo Glowworm Caves", location: "Waitomo", yearsActive: 137, weather: "Mixed", funScale: 8, cost: "$$", tags: ["Nature", "QuietFun", "RainyDay"], review: "Unreal silence. Floating in space." },
+        { name: "Skyline Rotorua Luge", location: "Rotorua", yearsActive: 41, weather: "Outdoor", funScale: 10, cost: "$$", tags: ["Adrenaline", "Teens", "TikTokViral"], review: "Highlight of the trip. Safe thrill." },
+        { name: "Weta Workshop Unleashed", location: "Auckland CBD", yearsActive: 6, weather: "Indoor", funScale: 8, cost: "$$", tags: ["RainyDay", "Creative", "Teens"], review: "Interactive gadgets kept kids busy." },
+        { name: "Velocity Valley", location: "Rotorua", yearsActive: 28, weather: "Outdoor", funScale: 9, cost: "$$$", tags: ["Adrenaline", "Teens", "TikTokViral"], review: "One stop shop for thrills." },
+        { name: "Redwoods Treewalk", location: "Rotorua", yearsActive: 11, weather: "Mixed", funScale: 8, cost: "$$", tags: ["Nature", "Photography", "Romantic"], review: "Magical at night." },
+        { name: "Kelly Tarlton's Aquarium", location: "Auckland", yearsActive: 41, weather: "Indoor", funScale: 6, cost: "$$", tags: ["ToddlerFriendly", "RainyDay"], review: "Penguin ride is unique." },
+        { name: "All Blacks Experience", location: "Auckland CBD", yearsActive: 6, weather: "Indoor", funScale: 7, cost: "$$", tags: ["Sports", "Cultural", "RainyDay"], review: "Haka room gave me chills." },
+        
+        // ANIMAL ENCOUNTERS
+        { name: "Auckland Zoo", location: "Auckland", yearsActive: 102, weather: "Outdoor", funScale: 7, cost: "$$", tags: ["Animals", "MultiGen", "Educational"], review: "World class orangutan habitat." },
+        { name: "Butterfly Creek", location: "Auckland Airport", yearsActive: 21, weather: "Mixed", funScale: 7, cost: "$$", tags: ["ToddlerFriendly", "Dinosaurs", "Animals"], review: "Dinosaur Kingdom is huge." },
+        { name: "Agrodome Farm Show", location: "Rotorua", yearsActive: 54, weather: "Indoor", funScale: 6, cost: "$$", tags: ["Cultural", "Animals", "Funny"], review: "Touristy but hilarious." },
+        { name: "National Kiwi Hatchery", location: "Rotorua", yearsActive: 15, weather: "Indoor", funScale: 6, cost: "$$", tags: ["Educational", "Nature", "RainyDay"], review: "Saw a baby kiwi being weighed!" },
+        { name: "Hamilton Zoo", location: "Hamilton", yearsActive: 55, weather: "Outdoor", funScale: 6, cost: "$", tags: ["Animals", "Free", "FamilyFun"], review: "Great expansive enclosures." },
+
+        // ADVENTURE & THEME PARKS
+        { name: "Rainbow's End", location: "Manukau", yearsActive: 44, weather: "Outdoor", funScale: 9, cost: "$$$", tags: ["Adrenaline", "Teens", "ThemePark"], review: "Classic NZ fun. Stratosfear is scary!" },
+        { name: "Spookers", location: "South Auckland", yearsActive: 20, weather: "Indoor", funScale: 9, cost: "$$$", tags: ["Horror", "Teens", "Adrenaline"], review: "Terrifying. 10/10 for brave teens." },
+        { name: "Snowplanet", location: "Silverdale", yearsActive: 20, weather: "Indoor", funScale: 8, cost: "$$", tags: ["Active", "RainyDay", "Snow"], review: "Real snow indoors. Great for learning." },
+        { name: "Waimarino Water Park", location: "Tauranga", yearsActive: 45, weather: "Outdoor", funScale: 8, cost: "$$", tags: ["WaterFun", "Summer", "Active"], review: "The Blob jumping pillow is legendary." },
+        { name: "Adrenalin Forest", location: "Wellington/BOP", yearsActive: 18, weather: "Outdoor", funScale: 8, cost: "$$", tags: ["Active", "Challenge", "Teens"], review: "Proper high ropes workout." },
+        { name: "Splash Planet", location: "Hastings", yearsActive: 26, weather: "Outdoor", funScale: 8, cost: "$$", tags: ["WaterFun", "Summer", "HiddenGem"], review: "Huge volume of slides." },
+
+        // GEOTHERMAL & CULTURE
+        { name: "Te Puia", location: "Rotorua", yearsActive: 60, weather: "Outdoor", funScale: 7, cost: "$$$", tags: ["Cultural", "Geothermal", "Iconic"], review: "Pohutu Geyser is impressive." },
+        { name: "Wai-O-Tapu Thermal", location: "Rotorua", yearsActive: 90, weather: "Outdoor", funScale: 7, cost: "$$", tags: ["Nature", "Photography", "Surreal"], review: "Champagne Pool colors are unreal." },
+        { name: "Hell's Gate Mud Spa", location: "Rotorua", yearsActive: 100, weather: "Outdoor", funScale: 6, cost: "$$$", tags: ["Relaxing", "Unique", "Dirty"], review: "Getting covered in mud was fun." },
+
+        // MUSEUMS & INDOOR
+        { name: "Te Papa (Gallipoli)", location: "Wellington", yearsActive: 27, weather: "Indoor", funScale: 6, cost: "Free", tags: ["Educational", "Cultural", "RainyDay", "Free"], review: "Scale models are haunting." },
+        { name: "MOTAT", location: "Auckland", yearsActive: 60, weather: "Mixed", funScale: 6, cost: "$", tags: ["Educational", "History", "Transport"], review: "Tram ride is great." },
+        { name: "Whoa! Studios", location: "West Auckland", yearsActive: 8, weather: "Mixed", funScale: 7, cost: "$", tags: ["ToddlerFriendly", "FoodOnSite", "Playground"], review: "Best playground in NZ." },
+        { name: "3D Trick Art Gallery", location: "Rotorua", yearsActive: 9, weather: "Indoor", funScale: 6, cost: "$", tags: ["RainyDay", "InstaWorthy", "FamilyFun"], review: "Hours of laughing at photos." },
+        { name: "Odyssey Sensory Maze", location: "Auckland CBD", yearsActive: 13, weather: "Indoor", funScale: 7, cost: "$", tags: ["RainyDay", "Trippy", "Teens"], review: "Disorienting and fun." },
+
+        // UNHEARD OF / NICHE
+        { name: "Driving Creek Railway", location: "Coromandel", yearsActive: 34, weather: "Mixed", funScale: 7, cost: "$$", tags: ["HiddenGem", "Scenic", "Unique"], review: "Mountain train built by a potter." },
+        { name: "Tawhiti Museum", location: "Hawera", yearsActive: 30, weather: "Indoor", funScale: 8, cost: "$", tags: ["HiddenGem", "Museum", "RainyDay"], review: "Best
